@@ -1,0 +1,14 @@
+{
+  "name": "blocipedia-node",
+  "version": "1.0.0",
+  "description": "App that allows users to create, collaborate and share wikis",
+  "main": "index.js",
+  "scripts": {
+    "test": "export NODE_ENV=test && jasmine"
+  },
+  "keywords": [
+    "blocipedia"
+  ],
+  "author": "Kenton Wan",
+  "license": "ISC"
+}
