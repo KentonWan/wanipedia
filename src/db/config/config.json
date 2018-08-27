@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "postgres",
+    "username": "kentonwan",
     "password": null,
     "database": "blocipedia-dev",
     "host": "127.0.0.1",
@@ -9,7 +9,7 @@
     "operatorsAliases": false
   },
   "test": {
-    "username": "postgres",
+    "username": "kentonwan",
     "password": null,
     "database": "blocipedia-test",
     "host": "127.0.0.1",
@@ -18,13 +18,13 @@
     "operatorsAliases": false
   },
   "production": {
-    "username": "root",
+    "username": "kentonwan",
     "password": null,
-    "database": "database_production",
+    "database": "process.env.DATABASE_URL",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "logging": false,
-    "operatorsAliases": false,
-    "use_env_variable": "DATABASE_URL"
+    "operatorsAliases": false
+    
   }
 }
