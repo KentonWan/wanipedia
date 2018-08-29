@@ -9,9 +9,11 @@
     <main class="container">
       <h1><%= wiki.title %></h1>
         <a href="/wikis/<%= wiki.id %>/edit", class="btn btn-warning">Edit</a>
-        <form style="display:initial" action="/wikis/:id/destroy" method="post">
-          <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
+        <% if(currentUser && currentUser.isAdmin()) { %>
+          <form style="display:initial" action="/wikis/:id/destroy" method="post">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        <% } %>
 
       <p><%= wiki.body %></p>
 
