@@ -23,7 +23,7 @@ describe("Wiki", () => {
                     title: "Blocipedia Rules",
                     body: "Well sort of",
                     private: false,
-                    userId: user.id
+                    userId: this.user.id
                 })
                 .then((wiki) => {
                     this.wiki = wiki;
@@ -51,6 +51,7 @@ describe("Wiki", () => {
 
                 expect(wiki.title).toBe("Bloccit came first");
                 expect(wiki.body).toBe("I'm thankful it did");
+                expect(wiki.userId).toBe(this.user.id);
                 done();
             })
             .catch((err) => {
@@ -93,7 +94,7 @@ describe("Wiki", () => {
                 this.wiki.setUser(newUser)
                 .then((wiki) => {
 
-                    expect(wiki.userId).toBe(newUser.id);
+                    expect(this.wiki.userId).toBe(newUser.id);
                     done();
                 });
             })

@@ -25,7 +25,7 @@ describe("routes : wikis", () => {
                     title: "Blocipedia Rules",
                     body: "Well sort of",
                     private: false,
-                    userId: user.id
+                    userId: this.user.id
                 })
                 .then((wiki) => {
                     this.wiki = wiki;
@@ -64,6 +64,27 @@ describe("routes : wikis", () => {
     });
 
     describe("POST /wikis/create", () => {
+        beforeEach((done) => {
+            User.create({
+              username: "kenton",
+              email: "email@email.com",
+              password: "password"
+            })
+            .then((user)=> {
+              request.get({         
+                url: "http://localhost:3000/auth/fake",
+                form: {
+                  username: user.username,
+                  userId: user.id,
+                  email: user.email    
+                }
+              },
+                (err, res, body) => {
+                  done();
+            });
+          });
+        });
+        
         const options = {
             url: `${base}create`,
             form: {
@@ -79,7 +100,7 @@ describe("routes : wikis", () => {
 
                 Wiki.findOne({where: {title: "Mason's Madness"}})
                 .then((wiki) => {
-                    expect(res.statusCode).toBe(303);
+                    expect(wiki).not.toBeNull();
                     expect(wiki.title).toBe("Mason's Madness");
                     expect(wiki.body).toBe("I become really crazy when I eat sugar");
                     done();
@@ -101,5 +122,74 @@ describe("routes : wikis", () => {
                 done();
             });
         });
-    })
+    });
+
+    describe("POST /wikis/:id/destroy", () => {
+
+        it("should deleted the wiki with the associated ID", (done) => {
+
+            expect(this.wiki.id).toBe(1);
+
+            request.post(`${base}${this.wiki.id}/destroy`, (err, res, body) => {
+
+                Wiki.findById(1)
+                .then((wiki) => {
+                    expect(err).toBeNull();
+                    expect(wiki).toBeNull();
+                    done();
+                })
+            })
+        })
+    });
+
+    describe("GET /wikis/:id/edit", () => {
+
+        it("should render a view with an edit wiki form", (done) => {
+          request.get(`${base}${this.wiki.id}/edit`, (err, res, body) => {
+            expect(err).toBeNull();
+            expect(body).toContain("Edit Wiki");
+            expect(body).toContain("Blocipedia Rules");
+            done();
+          });
+        });
+   
+      });
+
+      describe("POST /wikis/:id/update", () => {
+
+        it("should return a status code of 302", (done) => {
+            request.post({
+                url: `${base}${this.wiki.id}/update`,
+                form: {
+                    title: "Bloccit Rules",
+                    body: "The Bloc is Hot"
+                }
+            }, (err, res, body) => {
+                expect(res.statusCode).toBe(302);
+                done();
+            })
+        });
+
+        it('should update the wiki with the given values', (done) => {
+            const options = {
+                url: `${base}${this.wiki.id}/update`,
+                form: {
+                    title: "Bloccit Rules"
+                }
+            };
+
+            request.post(options, (err, res, body) => {
+
+                expect(err).toBeNull();
+
+                Wiki.findOne({
+                    where: {id: this.wiki.id}
+                })
+                .then((wiki) => {
+                    expect(wiki.title).toBe("Bloccit Rules");
+                    done();
+                });
+            });
+        });
+      });
 });
