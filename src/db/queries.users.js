@@ -11,7 +11,8 @@ module.exports = {
     return User.create({
         username: newUser.username,
         email: newUser.email,
-        password: hashedPassword
+        password: hashedPassword,
+        role: newUser.role
     })
     .then((user) => {
         callback(null, user);
@@ -19,6 +20,32 @@ module.exports = {
     .catch((err) => {
         callback(err);
     })
+    }, 
+
+    getUser(id, callback) {
+        User.findById(id)
+        .then((user) => {
+            callback(null, user);
+        })
+        .catch((err)=> {
+            callback(err);
+        })
+    }, 
+
+    updateUser(id, updatedRole, callback) {
+        return User.findById(id)
+        .then((user)=> {
+            if(!user){
+                return callback("User not found");
+            }
+            user.update({role: updatedRole},{fields: ['role']})
+            })
+            .then(() => {
+                callback(null, user);
+            })
+            .catch((err) => {
+                callback(err);
+            });
     }
 
 

@@ -24,10 +24,21 @@ describe("routes : users", () => {
     it("should render a view with a sign-up form", (done) => {
         request.get(`${base}signup`, (err, res, body) => {
             expect(err).toBeNull();
-            expect(body).toContain("Sign Up");
+            expect( body).toContain("Sign Up");
             done();
         });
     });
+  });
+
+  describe("GET /users/payment", () => {
+
+    it("should render a view with a payment form", (done) => {
+      request.get(`${base}payment`, (err, res, body) => {
+        expect(err).toBeNull();
+        expect(body).toContain("Payment");
+        done();
+      })
+    })
   });
 
   describe("POST /users", () => {
@@ -39,9 +50,9 @@ describe("routes : users", () => {
           form: {
             username: "kenton",
             email: "user@example.com",
-            password: "123456789"
+            password: "123456789",
           }
-        }
+        };
   
         request.post(options,
           (err, res, body) => {
@@ -96,6 +107,105 @@ describe("routes : users", () => {
           done();
         });
       });
+  });
+
+  describe("GET /users/:id", () => {
+
+    beforeEach((done) => {
+
+      this.user;
+
+      User.create({
+        username: "jackie",
+        email: "jackie@email.com",
+        password: "password"
+      })
+      .then((res) => {
+        this.user = res;
+        done()
+      });
+
+    });
+
+    it("should present a profile page of logged in user", (done) => {
+
+      request.get(`${base}${this.user.id}`, (err, res, body) => {
+        console.log(this.user);
+        expect(body).toContain("profile");
+        done();
+      });
+    });
+  });
+
+  describe("POST /users/:id/updatepremium", () => {
+
+    beforeEach((done) => {
+
+      this.user;
+
+      User.create({
+        username: "kevin",
+        email: "kevin@email.com",
+        password: "password",
+      })
+      .then((res) => {
+        this.user = res;
+        done()
+      });
+
+    });
+
+    it("should update the role to 1 when person pays to upgrade to premium membership", (done) => {
+
+
+    request.post(`${base}${this.user.id}/updatepremium`, (err,res, body) => {
+
+      expect(err).toBeNull();
+
+      User.findOne({ where: {id: this.user.id}})
+      .then((user)=> {
+        expect(user.role).toBe(1)
+        done();
+      });
+    });
+
+    })
+  });
+
+  describe("POST /users/:id/updatestandard", () => {
+
+    beforeEach((done) => {
+
+      this.user;
+
+      User.create({
+        username: "kevin",
+        email: "kevin@email.com",
+        password: "password",
+        role: 1
+      })
+      .then((res) => {
+        this.user = res;
+        done()
+      });
+
+    });
+
+    it("should update the role to 0 when person downgrades to standard membership", (done) => {
+
+
+    request.post(`${base}${this.user.id}/updatestandard`, (err,res, body) => {
+
+      expect(err).toBeNull();
+
+      User.findOne({ where: {id: this.user.id}})
+      .then((user)=> {
+        expect(user.role).toBe(0)
+        done();
+      });
+    });
+
+    })
   });
 
 });
