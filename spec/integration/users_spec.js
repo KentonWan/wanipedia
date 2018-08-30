@@ -130,7 +130,6 @@ describe("routes : users", () => {
     it("should present a profile page of logged in user", (done) => {
 
       request.get(`${base}${this.user.id}`, (err, res, body) => {
-        console.log(this.user);
         expect(body).toContain("profile");
         done();
       });

@@ -100,6 +100,7 @@ module.exports = {
                 console.log(err);
                 res.redirect(404, `/users/${req.params.id}`)
             } else {
+                console.log(user);
                 res.redirect(`/users/${req.params.id}`)
             }
         });
