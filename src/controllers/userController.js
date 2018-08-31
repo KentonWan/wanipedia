@@ -1,10 +1,13 @@
 const userQueries = require("../db/queries.users.js");
+const wikiQueries = require("../db/queries.wikis.js");
+
 const passport = require("passport");
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = {
     signUp (req, res, next){
+        window.alert("hello");
         res.render("users/signup");
     },
 
@@ -95,15 +98,26 @@ module.exports = {
     }, 
 
     updateStandard(req, res, next) {
-        userQueries.updateUser(req.params.id, 0, (err, user) => {
-            if(err || user == null) {
-                console.log(err);
-                res.redirect(404, `/users/${req.params.id}`)
-            } else {
-                console.log(user);
-                res.redirect(`/users/${req.params.id}`)
-            }
-        });
+
+            userQueries.updateUser(req.params.id, 0, (err, user) => {
+                if(err || user == null) {
+                    console.log(err);
+                    res.redirect(404, `/users/${req.params.id}`)
+                } else {
+                        req.flash("notice", "Your private wikis have now become public.")
+                        res.redirect(`/users/${req.params.id}`)
+                    }
+            });
+    
+            wikiQueries.updateWikiPrivacy(req.params.id, false, (err, user) => {
+                if(err || user == null) {
+                    console.log(err);
+                } else {
+                        res.redirect(`/users/${req.params.id}`)
+                    }
+            })
+
+      
     }, 
 
 }

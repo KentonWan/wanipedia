@@ -1,30 +1,43 @@
 const wikiQueries = require("../db/queries.wikis.js");
 const Authorizer = require("../policies/wiki");
+const passport = require("passport");
+
 
 module.exports = {
 
     index(req,res,next){
-        wikiQueries.getAllWikis((err, wikis) => {
-          if(err){
-              console.log(err);
-            res.redirect(500, "static/index");
-          } else {
-            res.render("wikis/index", {wikis});
-          }
-        })
-      },
+
+        if(req.user.role === 1){ 
+            wikiQueries.getAllWikis((err, wikis) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    res.render("wikis/index", {wikis})
+                }
+            })
+        } else {
+            wikiQueries.getAllPublicWikis((err, wikis) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    res.render("wikis/index", {wikis})
+                }
+            })
+        }
+    },
 
     new(req, res, next) {
         res.render("wikis/new");
     },
 
     create(req, res, next) {
+
         let newWiki = {
             title: req.body.title,
             body: req.body.body,
             private: req.body.private,
             userId: req.user.id
-        };
+        }; 
         wikiQueries.addWiki(newWiki, (err, wiki) => {
             console.log(err);
             if(err){
@@ -49,7 +62,7 @@ module.exports = {
 
     destroy(req, res, next) {
 
-        wikiQueries.deleteWiki(req, (err, deletedRecordsCount) => {
+        wikiQueries.deleteWiki(req, (err, wiki) => {
             if(err) {
                 res.redirect(500, `/wikis/${req.params.id}`)
             } else {
@@ -77,5 +90,6 @@ module.exports = {
                 res.redirect(`/wikis/${req.params.id}`)
             }
         });
-    }
+    },
+
 }

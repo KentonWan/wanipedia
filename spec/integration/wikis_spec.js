@@ -98,9 +98,46 @@ describe("routes : wikis", () => {
                     private: false,
                 }
             };
-            
-            it("should create a new wiki and redirect", (done) => {
+
+            it("should create a private wiki", (done) => {
+
+                const options = {
+                    url: `${base}create`,
+                    form: {
+                        title: "Mason's Madness",
+                        body: "I become really crazy when I eat sugar",
+                        private: true,
+                    }
+                };
+
+                request.post(options, (err, res, body) => {
     
+                    Wiki.findOne({where: {title: "Mason's Madness"}})
+                    .then((wiki) => {
+                        expect(wiki).not.toBeNull();
+                        expect(wiki.title).toBe("Mason's Madness");
+                        expect(wiki.body).toBe("I become really crazy when I eat sugar");
+                        done();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        done();
+                    });
+                });
+
+            })
+            
+            it("should create a public new wiki and redirect", (done) => {
+                
+                const options = {
+                    url: `${base}create`,
+                    form: {
+                        title: "Mason's Madness",
+                        body: "I become really crazy when I eat sugar",
+                        private: false,
+                    }
+                };
+
                 request.post(options, (err, res, body) => {
     
                     Wiki.findOne({where: {title: "Mason's Madness"}})
@@ -131,7 +168,7 @@ describe("routes : wikis", () => {
     
         describe("POST /wikis/:id/destroy", () => {
     
-            it("should deleted the wiki with the associated ID", (done) => {
+            it("should delete the wiki with the associated ID", (done) => {
     
                 expect(this.wiki.id).toBe(1);
     
@@ -244,15 +281,18 @@ describe("routes : wikis", () => {
                 User.create({
                   username: "kenton",
                   email: "email@email.com",
-                  password: "password"
+                  password: "password",
+                  role: 0
                 })
                 .then((user)=> {
+                    console.log(user);
                   request.get({         
                     url: "http://localhost:3000/auth/fake",
                     form: {
                       username: user.username,
                       userId: user.id,
-                      email: user.email    
+                      email: user.email,
+                      role: user.role    
                     }
                   },
                     (err, res, body) => {
@@ -261,17 +301,17 @@ describe("routes : wikis", () => {
               });
             });
             
-            const options = {
-                url: `${base}create`,
-                form: {
-                    title: "Mason's Madness",
-                    body: "I become really crazy when I eat sugar",
-                    private: false,
-                }
-            };
-            
             it("should create a new wiki and redirect", (done) => {
-    
+                
+                const options = {
+                    url: `${base}create`,
+                    form: {
+                        title: "Mason's Madness",
+                        body: "I become really crazy when I eat sugar",
+                        private: false,
+                    }
+                };
+
                 request.post(options, (err, res, body) => {
     
                     Wiki.findOne({where: {title: "Mason's Madness"}})
@@ -302,7 +342,7 @@ describe("routes : wikis", () => {
     
         describe("POST /wikis/:id/destroy", () => {
     
-            it("should  NOT deletee the wiki with the associated ID", (done) => {
+            it("should  NOT delete the wiki with the associated ID", (done) => {
     
                 Wiki.all()
                 .then((wikis) => {
@@ -310,7 +350,7 @@ describe("routes : wikis", () => {
 
                     expect(wikiCountBeforeDelete).toBe(1);
 
-                    request.post(`${base}${this.wiki.id}/destory`, (err, res, body) => {
+                    request.post(`${base}${this.wiki.id}/destroy`, (err, res, body) => {
                         Wiki.all()
                         .then((wikis) => {
                             expect(wikis.length).toBe(wikiCountBeforeDelete);
@@ -419,7 +459,8 @@ describe("routes : wikis", () => {
                 User.create({
                 username: "kenton",
                 email: "email@email.com",
-                password: "password"
+                password: "password",
+                role: 1
                 })
                 .then((user)=> {
                 request.get({         
@@ -427,7 +468,8 @@ describe("routes : wikis", () => {
                     form: {
                     username: user.username,
                     userId: user.id,
-                    email: user.email    
+                    email: user.email,
+                    role: user.role    
                     }
                 },
                     (err, res, body) => {
@@ -435,17 +477,44 @@ describe("routes : wikis", () => {
                 });
             });
             });
+
+            it("should create a PRIVATE wiki", (done) => {
+
+                const options = {
+                    url: `${base}create`,
+                    form: {
+                        title: "Mason's Madness",
+                        body: "I become really crazy when I eat sugar",
+                        private: true,
+                    }
+                };
+
+                request.post(options, (err, res, body) => {
+    
+                    Wiki.findOne({where: {title: "Mason's Madness"}})
+                    .then((wiki) => {
+                        expect(wiki).not.toBeNull();
+                        expect(wiki.title).toBe("Mason's Madness");
+                        expect(wiki.body).toBe("I become really crazy when I eat sugar");
+                        done();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        done();
+                    });
+                });
+
+            })
             
-            const options = {
-                url: `${base}create`,
-                form: {
-                    title: "Mason's Madness",
-                    body: "I become really crazy when I eat sugar",
-                    private: false,
-                }
-            };
-            
-            it("should create a new wiki and redirect", (done) => {
+            it("should create a new PUBLIC wiki and redirect", (done) => {
+                const options = {
+                    url: `${base}create`,
+                    form: {
+                        title: "Mason's Madness",
+                        body: "I become really crazy when I eat sugar",
+                        private: false,
+                    }
+                };
 
                 request.post(options, (err, res, body) => {
 
@@ -477,7 +546,7 @@ describe("routes : wikis", () => {
 
         describe("POST /wikis/:id/destroy", () => {
     
-            it("should  NOT deletee the wiki with the associated ID", (done) => {
+            it("should NOT delete the wiki with the associated ID", (done) => {
     
                 Wiki.all()
                 .then((wikis) => {
@@ -485,7 +554,7 @@ describe("routes : wikis", () => {
 
                     expect(wikiCountBeforeDelete).toBe(1);
 
-                    request.post(`${base}${this.wiki.id}/destory`, (err, res, body) => {
+                    request.post(`${base}${this.wiki.id}/destroy`, (err, res, body) => {
                         Wiki.all()
                         .then((wikis) => {
                             expect(wikis.length).toBe(wikiCountBeforeDelete);
