@@ -1,5 +1,7 @@
 const userQueries = require("../db/queries.users.js");
 const collaboratorQueries = require("../db/queries.collaborators.js");
+const Wiki = require("../db/models").Wiki;
+
 
 
 
@@ -7,14 +9,20 @@ module.exports = {
 
     index(req,res,next){
 
-            userQueries.getAllUsers((err, users) => {
+        this.wiki;
+        Wiki.findOne({where:{id: req.params.id}})
+        .then((wiki)=> {
+            this.wiki = wiki;
+
+            userQueries.getAllUsers(wiki.userId, (err, users)=> {
                 if(err) {
                     console.log(err);
                 } else {
                     res.render("collaborators/collaborators", {users})
                 }
             })
-        },
+        })
+    },
 
     create(req, res, next) {
 

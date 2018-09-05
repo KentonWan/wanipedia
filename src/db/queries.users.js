@@ -1,5 +1,8 @@
 const User = require("./models").User;
 const bcrypt = require("bcryptjs");
+const sequelize = require("./models/index").sequelize;
+const Op = sequelize.Op;
+
 
 module.exports = {
 
@@ -32,9 +35,9 @@ module.exports = {
         })
     },
     
-    getAllUsers(callback) {
-        return User.all()
-
+    getAllUsers(id, callback) {
+        return User.all({ where: {
+            [Op.not]: {id: id}}})
         .then((users) => {
             callback(null, users);
         })
