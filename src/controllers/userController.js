@@ -7,7 +7,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = {
     signUp (req, res, next){
-        window.alert("hello");
         res.render("users/signup");
     },
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../static/partials/head.ejs %>
+  </head>
+  <body>
+    <main class="container">
+      <% include ../static/partials/navbar.ejs %>
+
+      <h1>Add Collaborators</h1>
+      <form method="POST" action="collaborators/add">
+        <ul class="list-group">
+
+            <% users.forEach((user) => { %>
+
+            <li class="list-group-item">
+                <p><%= user.username %></p>
+                <input type="checkbox" name="userId" value="<%= user.id %>"><label for="userId">check to add</label>
+            </li>
+            <% }) %>
+        </ul>
+
+        <input type="submit" value="Add Collaborators" class="btn btn-primary">
+      </form>
+        
+
+
+    </main>
+  </body>
+</html>

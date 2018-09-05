@@ -1,5 +1,8 @@
 const Wiki = require("./models").Wiki;
 const Authorizer = require("../policies/wiki.js");
+const sequelize = require("./models/index").sequelize;
+const Op = sequelize.Op;
+
 
 
 module.exports = {
@@ -13,7 +16,7 @@ module.exports = {
         .catch((err) =>{
             callback(err);
         })
-    }, 
+    },
 
     getAllPublicWikis(callback) {
         return Wiki.all({where: {private: false}})
@@ -23,6 +26,17 @@ module.exports = {
         })
         .catch((err) => {
             callback(err);
+        })
+    },
+
+    getAllCollabPublicWikis(id,callback) {
+        return Wiki.all({ where: {
+            [Op.or]: [{private : false}, {id: id}]}})
+        .then((wikis) => {
+            callback(null,wikis);
+        })
+        .catch((err)=> {
+            callback(err)
         })
     },
 

@@ -17,7 +17,12 @@
 
       <p><%- markdownWiki.body %></p>
 
-      <!-- need edit button here-->
+      <% if(markdownWiki.private == true) { %> 
+      <div>
+        <a href="<%= markdownWiki.id %>/collaborators", class="btn btn-success">Add Collaborators</a>
+      </div>
+      <% } %>
+
       
     </main>
 
