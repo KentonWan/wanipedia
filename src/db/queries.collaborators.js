@@ -14,5 +14,16 @@ module.exports = {
         .catch((err) => {
             callback(err);
         })
+    }, 
+
+    getCollaborators(id, callback) {
+
+        return Collaborator.all({where:{wikiId: id}})
+        .then((collaborators)=> {
+            callback(null, collaborators);
+        })
+        .catch((err) => {
+            callback(err);
+        })
     }
 }

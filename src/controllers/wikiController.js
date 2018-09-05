@@ -3,6 +3,8 @@ const Authorizer = require("../policies/wiki");
 const passport = require("passport");
 const markdown = require("markdown").markdown;
 const Collaborator = require("../db/models").Collaborators;
+const collaboratorQueries = require("../db/queries.collaborators.js");
+
 
 
 module.exports = {
@@ -79,7 +81,6 @@ module.exports = {
                 userId: wiki.userId,
                 id: wiki.id
             };
-            console.log(markdownWiki);
             if(err || wiki == null) {
                 res.redirect(404, "/")
             } else {

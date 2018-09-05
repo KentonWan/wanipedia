@@ -26,8 +26,6 @@ module.exports = {
 
     create(req, res, next) {
 
-        console.log("Creating collaborator with userId=" + req.body.userId + "and wikiId" + req.params.id);
-
         let newCollaborator = {
             userId: req.body.userId,
             wikiId: req.params.id
@@ -41,6 +39,17 @@ module.exports = {
             } else {
                 req.flash("notice", "You've successful added collaborators!");
                 res.redirect(`/wikis/${req.params.id}`)
+            }
+        })
+    },
+
+    list(req, res, next) {
+        collaboratorQueries.getCollaborators(req.params.id, (err, collaborators)=> {
+            console.log(req.params.id);
+            if(err) {
+                console.log(err);
+            } else {
+                res.render("wikis/show", {collaborators})
             }
         })
     },

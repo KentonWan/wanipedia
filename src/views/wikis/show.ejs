@@ -23,6 +23,18 @@
       </div>
       <% } %>
 
+      <div>
+        <ul class="list-group">
+
+          <% collaborators.forEach((collaborator) => { %>
+
+          <li class="list-group-item">
+              <p><%= collaborator.userId %></p>
+          </li>
+          <% }) %>
+      </ul>
+      </div>
+
       
     </main>
 
