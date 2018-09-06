@@ -7,20 +7,30 @@
     <main class="container">
       <% include ../static/partials/navbar.ejs %>
 
-      <h1>Add Collaborators</h1>
+      <h1 class="text-center">Add Collaborators</h1>
       <form method="POST" action="collaborators/add">
-        <ul class="list-group">
+        <table class="table table-striped">
+          <tr class="text-center">
+            <th>Username</th>
+            <th>Email</th>
+            <th>Give Access</th>
+            <th>Remove Access</th>
+          </tr>
 
             <% users.forEach((user) => { %>
-
-            <li class="list-group-item">
-                <p><%= user.username %></p>
-                <input type="checkbox" name="userId" value="<%= user.id %>"><label for="userId">check to add</label>
-            </li>
+            <tr>
+              <td><%= user.username %></td>
+              <td><%= user.email %></td>
+              <td class="text-center"><input type="checkbox" name="userId" value="<%= user.id %>"></td>
+              <td><form method="POST" action="collaborators/destroy">
+                <button name="userId" value="<%= user.id %>" type="submit" class="btn btn-danger">Remove</button>
+                </form>
+              </td> 
+            </tr>
             <% }) %>
-        </ul>
+          </table>
 
-        <input type="submit" value="Add Collaborators" class="btn btn-primary">
+        <input type="submit" value="Share Wiki" class="btn btn-primary text-center">
       </form>
         
 

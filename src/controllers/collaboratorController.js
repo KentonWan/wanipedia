@@ -37,19 +37,36 @@ module.exports = {
                 req.flash("error", err);
                 res.redirect(`/`)
             } else {
-                req.flash("notice", "You've successful added collaborators!");
+                req.flash("notice", "You have successfully added collaborators to your wiki");
                 res.redirect(`/wikis/${req.params.id}`)
             }
         })
     },
 
+    destroy(req, res, next) {
+
+        this.collaborator;
+        Collaborator.findOne({where:{wikiId: req.params.id, userId: req.body.userId}})
+        .then((collaborator)=> {
+            this.collaborator = collaborator;
+
+            collaboratorQueries.deleteCollaborator(collaborator.id, (err, deletedRecordsCount) => {
+                if(err){
+                    res.redirect(500, `/wikis/${req.params.id}/collaborators`);
+                } else {
+                    res.redirect(303, `/wikis/${req.params.id}`);
+                }
+            })
+            
+        })
+    },
+
     list(req, res, next) {
-        collaboratorQueries.getCollaborators(req.params.id, (err, collaborators)=> {
-            console.log(req.params.id);
+        collaboratorQueries.getCollaborators((err, collaborators)=> {
             if(err) {
                 console.log(err);
             } else {
-                res.render("wikis/show", {collaborators})
+                res.render("/wikis/show", {collaborators})
             }
         })
     },

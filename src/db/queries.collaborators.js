@@ -1,4 +1,7 @@
 const Collaborator = require("./models").Collaborators;
+const sequelize = require("./models/index").sequelize;
+const Op = sequelize.Op;
+
 
 module.exports = {
 
@@ -16,14 +19,27 @@ module.exports = {
         })
     }, 
 
-    getCollaborators(id, callback) {
+    deleteCollaborator(id, callback){
+        return Collaborator.destroy({
+            where: {id: id}
+        })
+        .then((deletedRecordsCount) => {
+            callback(null, deletedRecordsCount);
+        })
+        .catch((err) => {
+            callback(err);
+        })
+    },
 
-        return Collaborator.all({where:{wikiId: id}})
-        .then((collaborators)=> {
+    getCollaborators(callback) {
+        return Collaborator.findAll({where: {wikiId: 5}})
+
+        .then((collaborators) => {
+            console.log(collaborators);
             callback(null, collaborators);
         })
         .catch((err) => {
             callback(err);
         })
-    }
+    },
 }

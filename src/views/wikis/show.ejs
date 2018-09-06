@@ -7,6 +7,9 @@
     <% include ../static/partials/navbar.ejs %>
 
     <main class="container">
+
+      <% include ../static/partials/messages.ejs %>
+
       <h1><%- markdownWiki.title %></h1>
         <a href="/wikis/<%= markdownWiki.id %>/edit", class="btn btn-warning">Edit</a>
         <% if(currentUser && currentUser.isAdmin()) { %>
@@ -22,18 +25,6 @@
         <a href="<%= markdownWiki.id %>/collaborators", class="btn btn-success">Add Collaborators</a>
       </div>
       <% } %>
-
-      <div>
-        <ul class="list-group">
-
-          <% collaborators.forEach((collaborator) => { %>
-
-          <li class="list-group-item">
-              <p><%= collaborator.userId %></p>
-          </li>
-          <% }) %>
-      </ul>
-      </div>
 
       
     </main>
