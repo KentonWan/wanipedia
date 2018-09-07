@@ -48,47 +48,48 @@ module.exports = {
     // // },
 
         
+    // getAllUsers(id, wikiId, callback) {
+    //     return User.all({
+    //         include: [{
+    //             model: Collaborator,
+    //             as: "collaborators",
+    //             attributes: [
+    //                 "wikiId",
+    //                 "userId"
+    //             ],
+    //             where: {
+    //                 [Op.not]: {wikiId: wikiId}
+    //             }
+    //         }]
+    //          }, {
+    //             where: {
+    //                 [Op.not]: [{id: id},{wikiId: wikiId}]
+    //             }
+    //     })
+    //     .then((users) => {
+    //         callback(null, users);
+    //     })
+    //     .catch((err) =>{
+    //         callback(err);
+    //     })
+    // },
+
     getAllUsers(id, wikiId, callback) {
         return User.all({
-            include: [{
-                model: Collaborator,
-                as: "collaborators",
-                attributes: [
-                    "wikiId",
-                    "userId"
-                ],
-                where: {
-                    [Op.not]: {wikiId: wikiId}
-                }
-            }]
-             }, {
-                where: {
-                    [Op.not]: [{id: id},{wikiId: wikiId}]
-                }
-        })
-        .then((users) => {
-            callback(null, users);
-        })
-        .catch((err) =>{
-            callback(err);
-        })
-    },
-
-    getAllUsers(userId, wikiId, callback) {
-        return User.all({
             where: {
-                id: {[Op.not]: userId}
+                id: {[Op.not]: id}
             },
             include: [{
                 model: Collaborator,
                 as: "collaborators",
                 attributes: [
                     "wikiId",
-                    "userId"
+                    "userId",
+                    "id"
                 ],
-                // where: {
-                //         wikiId: {[Op.not]: wikiId}
-                // }
+                where: {
+                    wikiId: {[Op.not]: wikiId}
+                },
             }]
         })
         .then((users) => {

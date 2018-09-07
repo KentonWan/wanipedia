@@ -9,9 +9,7 @@ const Collaborator = require("../db/models").Collaborators;
 module.exports = {
 
     index(req,res,next){
-
-        console.log(req.user.id);
-
+        
         this.collaborator;
         Collaborator.find({where: {userId: req.user.id}})
         .then((collaborator) => {

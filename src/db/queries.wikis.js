@@ -1,5 +1,7 @@
 const Wiki = require("./models").Wiki;
 const Collaborator = require("./models").Collaborators;
+const User = require("./models").User;
+
 const Authorizer = require("../policies/wiki.js");
 const sequelize = require("./models/index").sequelize;
 const Op = sequelize.Op;
@@ -9,8 +11,27 @@ const Op = sequelize.Op;
 module.exports = {
 
     getAllWikis(callback) {
-        return Wiki.all()
-
+        return Wiki.all(
+        //     {include: [{
+        //         model: User,
+        //         as: "users",
+        //         attributes: [
+        //             "id",
+        //             "wikiId",
+        //             "role"
+        //         ],
+        //         include: [{
+        //             model: Collaborator,
+        //             as: "collaborators",
+        //             attributes: [
+        //                 "id",
+        //                 "userId",
+        //                 "wikiId"
+        //             ]
+        //         }]
+        //     }]
+        // }
+        )
         .then((wikis) => {
             callback(null, wikis);
         })
