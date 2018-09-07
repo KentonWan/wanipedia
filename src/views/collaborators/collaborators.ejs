@@ -8,24 +8,19 @@
       <% include ../static/partials/navbar.ejs %>
 
       <h1 class="text-center">Add Collaborators</h1>
-      <form method="POST" action="collaborators/add">
+      <form method="POST" action="collaborators/add" class="text-center">
         <table class="table table-striped">
           <tr class="text-center">
             <th>Username</th>
             <th>Email</th>
             <th>Give Access</th>
-            <th>Remove Access</th>
           </tr>
 
             <% users.forEach((user) => { %>
             <tr>
               <td><%= user.username %></td>
               <td><%= user.email %></td>
-              <td class="text-center"><input type="checkbox" name="userId" value="<%= user.id %>"></td>
-              <td><form method="POST" action="collaborators/destroy">
-                <button name="userId" value="<%= user.id %>" type="submit" class="btn btn-danger">Remove</button>
-                </form>
-              </td> 
+              <td class="text-center"><input type="radio" name="userId" value="<%= user.id %>"></td>
             </tr>
             <% }) %>
           </table>

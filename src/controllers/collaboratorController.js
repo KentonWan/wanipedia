@@ -14,7 +14,7 @@ module.exports = {
         .then((wiki)=> {
             this.wiki = wiki;
 
-            userQueries.getAllUsers(wiki.userId, (err, users)=> {
+            userQueries.getAllUsers(wiki.userId, req.params.id, (err, users)=> {
                 if(err) {
                     console.log(err);
                 } else {
@@ -44,13 +44,7 @@ module.exports = {
     },
 
     destroy(req, res, next) {
-
-        this.collaborator;
-        Collaborator.findOne({where:{wikiId: req.params.id, userId: req.body.userId}})
-        .then((collaborator)=> {
-            this.collaborator = collaborator;
-
-            collaboratorQueries.deleteCollaborator(collaborator.id, (err, deletedRecordsCount) => {
+            collaboratorQueries.deleteCollaborator(req.params.collaboratorId, (err, collaborator) => {
                 if(err){
                     res.redirect(500, `/wikis/${req.params.id}/collaborators`);
                 } else {
@@ -58,15 +52,14 @@ module.exports = {
                 }
             })
             
-        })
     },
 
     list(req, res, next) {
-        collaboratorQueries.getCollaborators((err, collaborators)=> {
+        collaboratorQueries.getCollaborators(req.params.id, (err, collaborators)=> {
             if(err) {
                 console.log(err);
             } else {
-                res.render("/wikis/show", {collaborators})
+                res.render("collaborators/remove", {collaborators})
             }
         })
     },

@@ -1,4 +1,5 @@
 const Wiki = require("./models").Wiki;
+const Collaborator = require("./models").Collaborators;
 const Authorizer = require("../policies/wiki.js");
 const sequelize = require("./models/index").sequelize;
 const Op = sequelize.Op;
@@ -51,7 +52,16 @@ module.exports = {
     }, 
 
     getWiki(id, callback){
-        return Wiki.findById(id)
+        return Wiki.findById(id, {
+            include: [{
+                model: Collaborator,
+                as: "collaborators",
+                attributes: [
+                    "userId",
+                    "id"
+                ]
+            }]
+        })
         .then((wiki) => {
             callback(null, wiki)
         })

@@ -11,7 +11,6 @@
       <% include ../static/partials/messages.ejs %>
 
       <h1><%- markdownWiki.title %></h1>
-        <a href="/wikis/<%= markdownWiki.id %>/edit", class="btn btn-warning">Edit</a>
         <% if(currentUser && currentUser.isAdmin()) { %>
           <form style="display:initial" action="/wikis/:id/destroy" method="post">
             <button type="submit" class="btn btn-danger">Delete</button>
@@ -19,6 +18,7 @@
         <% } %>
 
       <p><%- markdownWiki.body %></p>
+      <a href="/wikis/<%= markdownWiki.id %>/edit", class="btn btn-warning">Edit</a>
 
       <% if(markdownWiki.private == true) { %> 
       <div>
@@ -26,6 +26,30 @@
       </div>
       <% } %>
 
+      <% if(markdownWiki.collaborators) { %> 
+      <div>
+        <h3>Current Collaborators</h3>
+          <table>
+            <tr class="text-center">
+              <th>User Id</th>
+              <th>Remove</th>
+            </tr>
+            <% markdownWiki.collaborators.forEach((collaborator) => { %>
+              <tr>
+                <td class="text-center"><%= collaborator.userId %></td>
+                <td class="text-center">
+                  <form method="POST" action="/wikis/<%= markdownWiki.id %>/collaborators/<%= collaborator.id %>/destroy">
+                    <input type="submit" value="Remove Access" class="btn btn-danger text-center">
+                  </form>
+                </td> 
+              </tr>
+              <% }) %>
+          </table>
+
+      </div>
+      <% } %>
+      
+      
       
     </main>
 

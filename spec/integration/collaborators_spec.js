@@ -104,12 +104,11 @@ describe("routes : collaborators", () => {
             })
             .then((collaborator) => {
                 this.collaborator = collaborator;
-                console.log(collaborator);
 
                 expect(this.collaborator.id).toBe(1);
 
-                request.post(`${base}${this.wiki.id}/collaborators/destroy`, (err, res, body) => {
-                    Collaborator.findById(1)
+                request.post(`${base}${this.wiki.id}/collaborators/${this.collaborator.id}/destroy`, (err, res, body) => {
+                    Collaborator.findOne({where:{id:1}})
                     .then((collaborator) => {
                         expect(err).toBeNull();
                         expect(collaborator).toBeNull();

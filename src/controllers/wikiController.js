@@ -80,7 +80,8 @@ module.exports = {
                 body: markdown.toHTML(wiki.body),
                 private: wiki.private,
                 userId: wiki.userId,
-                id: wiki.id
+                id: wiki.id,
+                collaborators: wiki.collaborators
             };
             if(err || wiki == null) {
                 res.redirect(404, "/")

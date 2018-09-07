@@ -20,22 +20,18 @@ module.exports = {
     }, 
 
     deleteCollaborator(id, callback){
-        return Collaborator.destroy({
-            where: {id: id}
-        })
-        .then((deletedRecordsCount) => {
-            callback(null, deletedRecordsCount);
-        })
-        .catch((err) => {
-            callback(err);
-        })
+       return Collaborator.destroy({where: {id: id}})
+       .then((collaborator) => {
+           callback(null, collaborator);
+       })
+       .catch((err)=> {
+           callback(err);
+       })
     },
 
-    getCollaborators(callback) {
-        return Collaborator.findAll({where: {wikiId: 5}})
-
+    getCollaborators(wikiId, callback) {
+        return Collaborator.findAll({where:{wikiId: wikiId}})
         .then((collaborators) => {
-            console.log(collaborators);
             callback(null, collaborators);
         })
         .catch((err) => {

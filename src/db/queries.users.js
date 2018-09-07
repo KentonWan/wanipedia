@@ -1,4 +1,5 @@
 const User = require("./models").User;
+const Collaborator = require("./models").Collaborators;
 const bcrypt = require("bcryptjs");
 const sequelize = require("./models/index").sequelize;
 const Op = sequelize.Op;
@@ -35,9 +36,61 @@ module.exports = {
         })
     },
     
-    getAllUsers(id, callback) {
-        return User.all({ where: {
-            [Op.not]: {id: id}}})
+    // getAllUsers(id, callback) {
+    //     return User.all({ where: {
+    //         [Op.not]: {id: id}}})
+    //     .then((users) => {
+    //         callback(null, users);
+    //     })
+    //     .catch((err) =>{
+    //         callback(err);
+    //     })
+    // // },
+
+        
+    getAllUsers(id, wikiId, callback) {
+        return User.all({
+            include: [{
+                model: Collaborator,
+                as: "collaborators",
+                attributes: [
+                    "wikiId",
+                    "userId"
+                ],
+                where: {
+                    [Op.not]: {wikiId: wikiId}
+                }
+            }]
+             }, {
+                where: {
+                    [Op.not]: [{id: id},{wikiId: wikiId}]
+                }
+        })
+        .then((users) => {
+            callback(null, users);
+        })
+        .catch((err) =>{
+            callback(err);
+        })
+    },
+
+    getAllUsers(userId, wikiId, callback) {
+        return User.all({
+            where: {
+                id: {[Op.not]: userId}
+            },
+            include: [{
+                model: Collaborator,
+                as: "collaborators",
+                attributes: [
+                    "wikiId",
+                    "userId"
+                ],
+                // where: {
+                //         wikiId: {[Op.not]: wikiId}
+                // }
+            }]
+        })
         .then((users) => {
             callback(null, users);
         })

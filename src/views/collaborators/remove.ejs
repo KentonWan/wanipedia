@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../static/partials/head.ejs %>
+  </head>
+  <body>
+    <main class="container">
+      <% include ../static/partials/navbar.ejs %>
+
+
+      <h1 class="text-center">Current Collaborators</h1>
+      <form class="text-center" method="POST" action="<%= collaborator.id %>/destroy">
+        <table class="table table-striped">
+          <tr class="text-center">
+            <th>Id</th>
+            <th>Remove Access</th>
+          </tr>
+
+            <% collaborators.forEach((collaborator) => { %>
+            <tr>
+              <td class="text-center"><%= collaborator.id %></td>
+              <td class="text-center"><input type="radio" name="id" value="<%= collaborator.id %>"></td> 
+            </tr>
+            <% }) %>
+          </table>
+
+        <input type="submit" value="Remove" class="btn btn-danger text-center">
+      </form>
+
+
+    </main>
+  </body>
+</html>
