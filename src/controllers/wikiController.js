@@ -9,42 +9,15 @@ const Collaborator = require("../db/models").Collaborators;
 module.exports = {
 
     index(req,res,next){
-        
-        this.collaborator;
-        Collaborator.find({where: {userId: req.user.id}})
-        .then((collaborator) => {
-            this.collaborator = collaborator;
-            console.log(this.collaborator);
 
-            if(req.user.role === 1){ // premium member
-                wikiQueries.getAllWikis((err, wikis) => {
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        res.render("wikis/index", {wikis})
-                    }
-                })
-            } else if(req.user.id == this.collaborator.userId) {
     
-                wikiQueries.getAllCollabPublicWikis(this.collaborator.wikiId, (err, wikis) => {
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        res.render("wikis/index", {wikis})
-                    }
-                });
-    
-            } else { // standard member
-                wikiQueries.getAllPublicWikis((err, wikis) => {
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        res.render("wikis/index", {wikis})
-                    }
-                })
+        wikiQueries.getAllWikis("false", req.user.id, (err,wikis)=>{
+            if(err) {
+                console.log(err);
+            } else {
+                res.render("wikis/index", {wikis})
             }
-        });
-
+        })
 
     },
 

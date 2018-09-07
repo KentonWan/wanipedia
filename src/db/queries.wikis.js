@@ -10,55 +10,31 @@ const Op = sequelize.Op;
 
 module.exports = {
 
-    getAllWikis(callback) {
-        return Wiki.all(
-        //     {include: [{
-        //         model: User,
-        //         as: "users",
-        //         attributes: [
-        //             "id",
-        //             "wikiId",
-        //             "role"
-        //         ],
-        //         include: [{
-        //             model: Collaborator,
-        //             as: "collaborators",
-        //             attributes: [
-        //                 "id",
-        //                 "userId",
-        //                 "wikiId"
-        //             ]
-        //         }]
-        //     }]
-        // }
+    getAllWikis(privacy, id, callback) {
+        return Wiki.all({
+            include: [{
+                model: Collaborator,
+                as: "collaborators",
+                where: {
+                    userId: id
+                },
+                required: false
+                }]
+            },
+            {
+            where: {
+                [Op.or]: [
+                    {private: privacy},
+                    {userId: id},
+                    ]
+                }
+            }
         )
         .then((wikis) => {
             callback(null, wikis);
         })
         .catch((err) =>{
             callback(err);
-        })
-    },
-
-    getAllPublicWikis(callback) {
-        return Wiki.all({where: {private: false}})
-
-        .then((wikis) => {
-            callback(null, wikis);
-        })
-        .catch((err) => {
-            callback(err);
-        })
-    },
-
-    getAllCollabPublicWikis(id,callback) {
-        return Wiki.all({ where: {
-            [Op.or]: [{private : false}, {id: id}]}})
-        .then((wikis) => {
-            callback(null,wikis);
-        })
-        .catch((err)=> {
-            callback(err)
         })
     },
 

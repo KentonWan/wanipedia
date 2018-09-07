@@ -77,7 +77,7 @@ module.exports = {
     getAllUsers(id, wikiId, callback) {
         return User.all({
             where: {
-                id: {[Op.not]: id}
+                id: {[Op.ne]: id}
             },
             include: [{
                 model: Collaborator,
@@ -85,11 +85,7 @@ module.exports = {
                 attributes: [
                     "wikiId",
                     "userId",
-                    "id"
                 ],
-                where: {
-                    wikiId: {[Op.not]: wikiId}
-                },
             }]
         })
         .then((users) => {
