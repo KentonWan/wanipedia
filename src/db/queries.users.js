@@ -35,17 +35,6 @@ module.exports = {
             callback(err);
         })
     },
-    
-    // getAllUsers(id, callback) {
-    //     return User.all({ where: {
-    //         [Op.not]: {id: id}}})
-    //     .then((users) => {
-    //         callback(null, users);
-    //     })
-    //     .catch((err) =>{
-    //         callback(err);
-    //     })
-    // // },
 
         
     // getAllUsers(id, wikiId, callback) {
@@ -75,20 +64,22 @@ module.exports = {
     // },
 
     getAllUsers(id, wikiId, callback) {
-        return User.all({
-            where: {
-                id: {[Op.ne]: id}
-            },
+
+    return User.all({
+                where: {
+                    [Op.or]: [
+                        {id: {[Op.ne]: id}},
+                        {'$collaborators.wikiId$': {[Op.ne]: wikiId}}
+                    ]
+                },
             include: [{
                 model: Collaborator,
                 as: "collaborators",
-                attributes: [
-                    "wikiId",
-                    "userId",
-                ],
+                // required: false
             }]
         })
         .then((users) => {
+            console.log(users);
             callback(null, users);
         })
         .catch((err) =>{

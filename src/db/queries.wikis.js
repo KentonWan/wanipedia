@@ -15,6 +15,9 @@ module.exports = {
             include: [{
                 model: Collaborator,
                 as: "collaborators",
+                attributes: [
+                    "userId"
+                ],
                 where: {
                     userId: id
                 },
@@ -22,13 +25,13 @@ module.exports = {
                 }]
             },
             {
-            where: {
-                [Op.or]: [
-                    {private: privacy},
-                    {userId: id},
-                    ]
-                }
-            }
+                where: {
+                    [Op.or]: [
+                        {private: privacy},
+                        {userId: id},
+                        ]
+                    }
+                } 
         )
         .then((wikis) => {
             callback(null, wikis);
