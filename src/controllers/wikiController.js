@@ -11,7 +11,7 @@ module.exports = {
     index(req,res,next){
 
     
-        wikiQueries.getAllWikis("false", req.user.id, (err,wikis)=>{
+        wikiQueries.getAllWikis(req.user, (err,wikis)=>{
             if(err) {
                 console.log(err);
             } else {

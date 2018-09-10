@@ -10,31 +10,68 @@ const Op = sequelize.Op;
 
 module.exports = {
 
-    getAllWikis(privacy, id, callback) {
+    getAllWikis(user, callback) {
         return Wiki.all({
             include: [{
                 model: Collaborator,
                 as: "collaborators",
                 attributes: [
-                    "userId"
-                ],
-                where: {
-                    userId: id
-                },
-                required: false
+                    "userId",
+                    "wikiId"
+                ]
                 }]
             },
-            {
-                where: {
-                    [Op.or]: [
-                        {private: privacy},
-                        {userId: id},
-                        ]
-                    }
-                } 
         )
         .then((wikis) => {
-            callback(null, wikis);
+            console.log(wikis);
+
+            if(user.role === 2){ // admin
+
+                callback(null, wikis);
+
+            } else if (user.role === 1){ // premium
+                const premiumWikis = [];
+                for(let i = 0; i < wikis.length; i++){
+
+                    if(wikis[i].dataValues.userId === user.id || (wikis[i].dataValues.private == false && wikis[i].collaborators.length === 0)) {
+
+                        premiumWikis.push(wikis[i]);
+
+                    } else {
+
+                        for(let j=0; j < wikis[i].collaborators.length; j++) {
+                                                    
+                            if(wikis[i].dataValues.private == false) {
+                                premiumWikis.push(wikis[i])
+                            } else if(wikis[i].collaborators[j].userId === user.id) {
+                                premiumWikis.push(wikis[i])
+                            }
+
+                        }
+  
+                    }
+                    
+                }
+                callback(null, premiumWikis);
+
+            } else {
+                console.log("returning all wikis from standard");
+
+                for(let i = 0; i < wikis.length; i++){
+                    for(let j = 0; j < wikis[i].collaborators.length; j++){
+                        console.log(wikis[i].collaborators[j]);
+
+
+                        if(wikis[i].private === "true"  && wikis[i].collaborators[j].userId !== user.id){
+                            wikis.splice(i,1);
+                            i--
+                        }
+                    }
+                }
+
+                callback(null, wikis);
+
+            }
         })
         .catch((err) =>{
             callback(err);
