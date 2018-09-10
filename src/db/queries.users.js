@@ -36,51 +36,31 @@ module.exports = {
         })
     },
 
-        
-    // getAllUsers(id, wikiId, callback) {
-    //     return User.all({
-    //         include: [{
-    //             model: Collaborator,
-    //             as: "collaborators",
-    //             attributes: [
-    //                 "wikiId",
-    //                 "userId"
-    //             ],
-    //             where: {
-    //                 [Op.not]: {wikiId: wikiId}
-    //             }
-    //         }]
-    //          }, {
-    //             where: {
-    //                 [Op.not]: [{id: id},{wikiId: wikiId}]
-    //             }
-    //     })
-    //     .then((users) => {
-    //         callback(null, users);
-    //     })
-    //     .catch((err) =>{
-    //         callback(err);
-    //     })
-    // },
-
     getAllUsers(id, wikiId, callback) {
 
     return User.all({
                 where: {
-                    [Op.or]: [
-                        {id: {[Op.ne]: id}},
-                        {'$collaborators.wikiId$': {[Op.ne]: wikiId}}
-                    ]
+                        id: {
+                            [Op.ne]: id
+                        },
                 },
             include: [{
                 model: Collaborator,
                 as: "collaborators",
-                // required: false
             }]
         })
         .then((users) => {
-            console.log(users);
-            callback(null, users);
+            let possibleCollabs = users;
+            for(let i = 0; i < possibleCollabs.length; i++){
+                for(let j = 0; j < possibleCollabs[i].collaborators.length; j++ ){
+                    if(possibleCollabs[i].collaborators[j].wikiId == wikiId){
+                        possibleCollabs.splice(i,1);
+                        i--
+                    }
+                }
+            }
+
+            callback(null, possibleCollabs);
         })
         .catch((err) =>{
             callback(err);

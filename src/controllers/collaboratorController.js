@@ -14,11 +14,11 @@ module.exports = {
         .then((wiki)=> {
             this.wiki = wiki;
 
-            userQueries.getAllUsers(wiki.userId, req.params.id, (err, users)=> {
+            userQueries.getAllUsers(wiki.userId, req.params.id, (err, possibleCollabs)=> {
                 if(err) {
                     console.log(err);
                 } else {
-                    res.render("collaborators/collaborators", {users})
+                    res.render("collaborators/collaborators", {possibleCollabs})
                 }
             })
         })
