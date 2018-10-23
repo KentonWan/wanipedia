@@ -11,7 +11,7 @@
 
       <% include ../static/partials/messages.ejs %>
 
-      <h1><%= `${user.username}'s profile` %></h1>
+      <h2 style="margin-top: 10px;"><%= `${user.username}'s profile` %></h2>
 
       <hr>
       
@@ -21,9 +21,11 @@
             <a href="/users/payment", class="btn btn-lg btn-success">Upgrade to Premium</a>
             <small>For only $15 you get access to create private wikis!</small>
         </div>
-      <% } %>
 
         <hr>
+
+      <% } %>
+
 
       <% if(currentUser && currentUser.role == 1) { %>
 
